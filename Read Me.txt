@@ -1,0 +1,13 @@
+//////////////////////
+//Author: Jugal Gandhi
+//////////////////////
+
+Do the following to make the app run:
+
+1. Open the "MovieDataFetchAndDisplay.java" class;
+
+2. Replace the value of your api key obtained from themoviedb.org at the string name 'api_key'.
+
+3. Rebuild the project and you are good to go.
+
+Have a nice day!!
