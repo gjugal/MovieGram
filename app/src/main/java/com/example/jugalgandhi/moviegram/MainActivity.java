@@ -3,8 +3,12 @@ package com.example.jugalgandhi.moviegram;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.GridView;
 
 import butterknife.Bind;
@@ -12,7 +16,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    @Bind(R.id.gridview)
     GridView gView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +24,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        gView = (GridView)findViewById(R.id.gridview);
+        ButterKnife.setDebug(true);
+        ButterKnife.bind(this);
+        setUpDisplayMetrics(this,gView);
         MovieDataFetchAndDisplay mvdFetch = new MovieDataFetchAndDisplay(this,gView);
         mvdFetch.startFetch();
-        //ButterKnife.bind(this);
+        Log.d("GVIEW_WIDTH",""+gView.getColumnWidth());
+    }
+
+    private void setUpDisplayMetrics(MainActivity act, GridView gView) {
+        DisplayMetrics displayMetrics = act.getApplicationContext().getResources().getDisplayMetrics();
+        int width = displayMetrics.widthPixels;
+        int height = displayMetrics.heightPixels;
+        Log.d("GVIEW_WIDTH",""+width);
+        gView.setColumnWidth(width/2);
     }
 
     @Override

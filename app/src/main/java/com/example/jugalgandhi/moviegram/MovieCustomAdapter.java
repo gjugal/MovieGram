@@ -13,6 +13,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Created by jugal gandhi on 1/2/2016.
  */
@@ -42,19 +45,40 @@ public class MovieCustomAdapter extends ArrayAdapter<MovieElements> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        MovieElements movie = getItem(position);
+
+        ViewHolder holder;
+
         // Adapters recycle views to AdapterViews.
         // If this is a new View object we're getting, then inflate the layout.
         // If not, this view already has the layout inflated from a previous call to getView,
         // and we modify the View widgets as usual.
-        if (convertView == null) {
+
+        if (convertView != null) {
+            holder = (ViewHolder) convertView.getTag();
+        } else {
             convertView = LayoutInflater.from(getContext()).inflate(
                     R.layout.movie_item_layout, parent, false);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
         }
-        ImageView iconView = (ImageView) convertView.findViewById(R.id.movie_image);
+
+        MovieElements movie = getItem(position);
+        ImageView iconView = (ImageView) holder.image;
         Picasso.with(myContext).load(movie.getMovieImageUrl()).into(iconView);
-        TextView versionNameView = (TextView) convertView.findViewById(R.id.movie_text);
+        TextView versionNameView = (TextView) holder.text;
         versionNameView.setText(movie.getMovieTitle());
         return convertView;
+    }
+
+    static class ViewHolder {
+
+        @Bind(R.id.movie_text)
+        TextView text;
+        @Bind(R.id.movie_image)
+        ImageView image;
+
+        public ViewHolder(View view) {
+            ButterKnife.bind(this, view);
+        }
     }
 }
