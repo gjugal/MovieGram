@@ -152,6 +152,10 @@ public class MovieDataFetchAndDisplay {
         final String MD_RESULTS= "results";
         final String MD_TITLE = "original_title";
         final String MD_IMAGE_URL = "poster_path";
+        final String MD_OVERVIEW = "overview";
+        final String MD_R_DATE = "release_date";
+        final String MD_RATING = "vote_average";
+
 
         JSONObject movieJson = new JSONObject(movieJsonStr);
         JSONArray result_array = movieJson.getJSONArray(MD_RESULTS);
@@ -161,7 +165,15 @@ public class MovieDataFetchAndDisplay {
             JSONObject movieItem = result_array.getJSONObject(i);
             String title = movieItem.getString(MD_TITLE);
             String image_url = movieItem.getString(MD_IMAGE_URL);
-            myMovieItems[i] = new MovieElements(title, image_url);
+            String overview = movieItem.getString(MD_OVERVIEW);
+            String releaseDate = movieItem.getString(MD_R_DATE);
+            String rating = movieItem.getString(MD_RATING);
+            myMovieItems[i] = new MovieElements(title, image_url, overview, releaseDate, rating);
         }
+    }
+
+    public MovieElements[] getAllMovieItems()
+    {
+        return this.myMovieItems;
     }
 }
