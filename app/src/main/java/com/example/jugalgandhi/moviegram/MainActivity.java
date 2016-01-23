@@ -1,8 +1,12 @@
 package com.example.jugalgandhi.moviegram;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Debug;
+import android.preference.PreferenceManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -12,50 +16,92 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * This activity is used to display different movies.
+ *
+ * @author Jugal Gandhi
+ * @version 1.0.1
+ *
+ */
 public class MainActivity extends AppCompatActivity {
 
 
     @Bind(R.id.gridview)
     GridView gView;
 
+    @Bind(R.id.swipe_container)
+    SwipeRefreshLayout swipeLayout;
+
+    MovieDataFetchAndDisplay mvdFetch;
+
     private int width_of_image = 185;
+
+    private MovieElementsList savedData;
+    private int page = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("CREATE", "over here");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //ButterKnife.setDebug(true);
         ButterKnife.bind(this);
-        setUpDisplayMetrics(this, gView);
-        final MovieDataFetchAndDisplay mvdFetch = new MovieDataFetchAndDisplay(this,gView);
-        mvdFetch.startFetch();
-        gView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent movieIntent = new Intent(MainActivity.this,DetailsActivity.class);
-                movieIntent.putExtra("movie_info",mvdFetch.getAllMovieItems()[position]);
-                Log.d("TITLE_SENT",mvdFetch.getAllMovieItems()[position].getMovieTitle());
-                //movieIntent.putExtra("movie_data",mvdFetch.getAllMovieItems()[position]);
-                startActivity(movieIntent);
-            }
-        });
-        Log.d("GVIEW_WIDTH",""+gView.getColumnWidth());
+        savedData = new MovieElementsList();
+        mvdFetch = new MovieDataFetchAndDisplay(this,gView);
+        setGridViewProperties(this, gView);
+        setSwipeLayout();
+
+        //get the data from savedInstanceState
+        if (savedInstanceState != null) {
+            savedData = savedInstanceState.getParcelable("SAVED_MOVIE_LIST");
+            page = savedInstanceState.getInt("CURRENT_PAGE_VALUE");
+            Log.d("SAVED_DATA",savedData.toString());
+            mvdFetch.setMovieItemsArrayList(savedData);
+            mvdFetch.setCurrentPageValue(page);
+        }
+        else {
+            mvdFetch.startFetch(false);
+        }
     }
 
-    private void setUpDisplayMetrics(MainActivity act, GridView gView) {
+    private void setGridViewProperties(MainActivity act, GridView gView) {
+
         DisplayMetrics displayMetrics = act.getApplicationContext().getResources().getDisplayMetrics();
         int width = displayMetrics.widthPixels;
         int height = displayMetrics.heightPixels;
-        Log.d("GVIEW_WIDTH",""+width);
-        gView.setNumColumns(width/width_of_image);
+        gView.setNumColumns(width / width_of_image);
+
+        gView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent movieIntent = new Intent(MainActivity.this, DetailsActivity.class);
+                movieIntent.putExtra("movie_info", mvdFetch.getMovieItemsArrayList().get(position));
+                startActivity(movieIntent);
+            }
+        });
+
+        gView.setOnScrollListener(new EndlessScrollListener(6,mvdFetch));
+    }
+
+    private void setSwipeLayout()
+    {
+        swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mvdFetch.startFetch(true);
+                swipeLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -74,9 +120,43 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            Intent settings_intent = new Intent(MainActivity.this,SettingsActivity.class);
+            startActivity(settings_intent);
+        }
+
+        else if(id == R.id.action_refresh){
+            mvdFetch.startFetch(true);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("START", "over here");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String sortingOrder = prefs.getString(getString(R.string.pref_sort_key),
+                getString(R.string.pref_sort_default));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedData = mvdFetch.getMovieItemsArrayList();
+        page = mvdFetch.getCurrentPageValue();
+        if(savedData != null && page != -1)
+        {
+            savedInstanceState.putParcelable("SAVED_MOVIE_LIST", savedData);
+            savedInstanceState.putInt("CURRENT_PAGE_VALUE",page);
+        }
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        Log.d("DESTROY","over here");
     }
 }

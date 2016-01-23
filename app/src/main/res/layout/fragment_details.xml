@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,12 +9,23 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.jugalgandhi.moviegram.DetailsActivity$PlaceholderFragment">
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
     <TextView
         android:id="@+id/details_title"
-        android:text="hii"
+        android:text=""
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorCustom2"
+        android:textAllCaps="true"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="center"/>
 
     <ImageView
         android:layout_width="match_parent"
@@ -21,23 +33,39 @@
         android:scaleType="fitXY"
         android:id="@+id/details_poster"
         android:layout_below="@id/details_title"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/details_overview"
-        android:text="hii"
-        android:layout_below="@id/details_poster"/>
+        android:text=""
+        android:layout_below="@id/details_poster"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/details_ratings"
-        android:text="hii"
-        android:layout_below="@id/details_overview"/>
+        android:text=""
+        android:layout_below="@id/details_overview"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/colorCustom2"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:textStyle="bold"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/details_r_date"
-        android:text="hii"
-        android:layout_below="@id/details_ratings"/>
-</RelativeLayout>
+        android:text=""
+        android:layout_below="@id/details_ratings"
+        android:textColor="@color/colorCustom2"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:fontFamily="sans-serif-condensed"
+        android:textStyle="bold"/>
+    </LinearLayout>
+
+</ScrollView>

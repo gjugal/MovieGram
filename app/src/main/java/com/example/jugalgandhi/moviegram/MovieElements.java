@@ -51,11 +51,11 @@ public class MovieElements implements Parcelable {
     }
 
     public String getReleaseDate() {
-        return release_date;
+        return "RELEASE DATE : " + release_date;
     }
 
     public String getRating() {
-        return rating;
+        return "RATINGS : " + rating;
     }
 
     public String getMovieImageUrl() {

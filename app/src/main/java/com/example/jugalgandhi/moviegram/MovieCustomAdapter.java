@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -29,7 +30,7 @@ public class MovieCustomAdapter extends ArrayAdapter<MovieElements> {
      * @param context        The current context. Used to inflate the layout file.
      * @param items A List of MovieElements objects to display in a list
      */
-    public MovieCustomAdapter(Activity context, MovieElements[] items) {
+    public MovieCustomAdapter(Activity context, ArrayList<MovieElements> items) {
         super(context, 0, items);
         myContext = context.getApplicationContext();
     }
@@ -64,7 +65,10 @@ public class MovieCustomAdapter extends ArrayAdapter<MovieElements> {
 
         MovieElements movie = getItem(position);
         ImageView iconView = (ImageView) holder.image;
-        Picasso.with(myContext).load(movie.getMovieImageUrl()).into(iconView);
+        Picasso.with(myContext)
+                .load(movie.getMovieImageUrl())
+                .error(R.mipmap.ic_launcher)
+                .into(iconView);
         TextView versionNameView = (TextView) holder.text;
         versionNameView.setText(movie.getMovieTitle());
         return convertView;
@@ -77,7 +81,8 @@ public class MovieCustomAdapter extends ArrayAdapter<MovieElements> {
         @Bind(R.id.movie_image)
         ImageView image;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view)
+        {
             ButterKnife.bind(this, view);
         }
     }

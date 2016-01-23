@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">MovieGram</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_details">My Message</string>
+    <string name="action_refresh">Refresh</string>
+    <string name="title_activity_details">Details</string>
+    <string name="title_activity_settings">Settings</string>
+
+
+    <string name="pref_sort" >Sort By</string>
+    <string name="pref_sort_default" translatable="false">popularity.desc</string>
+    <string name="pref_sort_key" translatable="false">pref_sort</string>
+    <string name="pref_sort_popular" translatable="false">popularity.desc</string>
+    <string name="pref_sort_rated" translatable="false">vote_average.desc</string>
+    <string name="pref_sort_title_popular">Most Popular</string>
+    <string name="pref_sort_title_rated">Top Rated</string>
 </resources>
