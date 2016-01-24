@@ -30,7 +30,7 @@ public class MovieCustomAdapter extends ArrayAdapter<MovieElements> {
      * @param context        The current context. Used to inflate the layout file.
      * @param items A List of MovieElements objects to display in a list
      */
-    public MovieCustomAdapter(Activity context, ArrayList<MovieElements> items) {
+    public MovieCustomAdapter(Activity context, MovieElementsList items) {
         super(context, 0, items);
         myContext = context.getApplicationContext();
     }
