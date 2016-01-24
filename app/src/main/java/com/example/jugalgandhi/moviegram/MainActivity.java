@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MovieElementsList savedData;
     private int page = -1;
+    private boolean checkOnStart = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         //get the data from savedInstanceState
         if (savedInstanceState != null) {
+            checkOnStart = false;
             savedData = savedInstanceState.getParcelable("SAVED_MOVIE_LIST");
             page = savedInstanceState.getInt("CURRENT_PAGE_VALUE");
             Log.d("SAVED_DATA",savedData.toString());
@@ -135,13 +137,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d("START", "over here");
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String sortingOrder = prefs.getString(getString(R.string.pref_sort_key),
-                getString(R.string.pref_sort_default));
+        if(checkOnStart) {
+            mvdFetch.checkIfPreferencesHaveChanged();
+        }else{
+            checkOnStart = true;
+        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
+        Log.d("SAVING_DATA","over here");
         savedData = mvdFetch.getMovieItemsArrayList();
         page = mvdFetch.getCurrentPageValue();
         if(savedData != null && page != -1)

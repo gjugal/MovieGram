@@ -30,7 +30,7 @@ import java.util.ArrayList;
  */
 public class MovieDataFetchAndDisplay {
 
-    private final String api_key = "YOUR_KEY";
+    private final String api_key = "YOUR_API_KEY";
     private String sort_type = "";
     private int CURRENT_PAGE = -1;
     private final int LAST_PAGE = 10;
@@ -271,5 +271,23 @@ public class MovieDataFetchAndDisplay {
     public boolean getLoading()
     {
         return loading;
+    }
+
+    public void checkIfPreferencesHaveChanged()
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        sort_type = prefs.getString(context.getString(R.string.pref_sort_key),context.getString(R.string.pref_sort_default));
+        if(!sort_type.equals(last_sort_type))
+        {
+            last_sort_type = sort_type;
+            setCurrentPageValue(0);
+            myMovieItemsList.clear();
+            mMovieAdapter.clear();
+            mMovieAdapter.notifyDataSetChanged();
+            startFetch(false);
+        }
+        else {
+            return;
+        }
     }
 }
